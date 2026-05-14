@@ -35,7 +35,7 @@ jobs:
 
           mkdir -p dataset_zip
 
-          megadl "https://mega.nz/file/p3BXyL4a#eHEPyXYcR77ONTh1WxJOUR2n9DL5IU8GUKuYPWxjjXw" \
+          megadl "https://mega.nz/file/g74jXQ5L#vAxEbR4zyNLc_KNUgGE1BHbepxivutRPejtaiUjNCzA" \
             --path dataset_zip
 
           mkdir -p dataset
