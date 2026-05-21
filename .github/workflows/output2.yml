@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        VIDEO_ID: [535,557,575,670,709,715,734,736,822,844,888,890,891,914]
+        VIDEO_ID: [814]
 
     env:
       FRAME_LIMIT: 0   # 0 = full video, 10 = test
