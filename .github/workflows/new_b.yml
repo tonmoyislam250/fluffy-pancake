@@ -58,7 +58,7 @@ jobs:
 
       - name: Set vvenc path
         run: |
-          echo "VVENCAPP=$GITHUB_WORKSPACE/vvenc/bin/vvencapp" >> $GITHUB_ENV
+          echo "VVENCAPP=$GITHUB_WORKSPACE/vvenc/bin/vvencFFapp" >> $GITHUB_ENV
 
       # ----------------------------------------
       # Cache dataset
