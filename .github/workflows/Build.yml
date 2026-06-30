@@ -1,8 +1,6 @@
 name: CI build
 
 on:
-  push:
-    branches: [master, release, gh_actions*]
   pull_request:
   release:
     types:
