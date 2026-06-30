@@ -23,13 +23,14 @@ jobs:
         run: |
           cd vvenc_src
           mkdir build && cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DVVENC_INSTALL_FULLFEATURE_APP=ON
           make -j$(nproc)
 
       - name: Prepare cache directory
         run: |
           mkdir -p vvenc/bin
           cp vvenc_src/bin/release-static/vvencapp vvenc/bin/
+          cp vvenc_src/bin/release-static/vvencFFapp vvenc/bin/
 
       - name: Cache vvenc binaries
         uses: actions/cache/save@v4
@@ -42,5 +43,7 @@ jobs:
         with:
           tag_name: vvenc-autobuild
           name: vvenc Autobuild
-          files: vvenc/bin/vvencapp
+          files: |
+            vvenc/bin/vvencapp
+            vvenc/bin/vvencFFapp
           make_latest: true
