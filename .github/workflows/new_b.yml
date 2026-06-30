@@ -139,7 +139,6 @@ jobs:
             $FFMPEG -v error -y \
               -i "$INPUT" \
               -vf "select='between(n\,${FIRST_FRAME}\,${LAST_FRAME})',setpts=N/FRAME_RATE/TB" \
-              -vsync 0 \
               -pix_fmt yuv420p \
               -s ${WIDTH}x${HEIGHT} \
               -r ${FPS} \
