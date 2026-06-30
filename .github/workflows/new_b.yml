@@ -36,14 +36,14 @@ jobs:
         run: |
           mkdir -p ffmpeg_bin
           cd ffmpeg_bin
-          wget -q https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz
-          tar -xf ffmpeg-master-latest-linux64-gpl.tar.xz
+          wget -q https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2025-12-31-14-28/ffmpeg-N-122306-geea648ef1d-linux64-gpl.tar.xz
+          tar -xf ffmpeg-N-122306-geea648ef1d-linux64-gpl.tar.xz
 
       # ----------------------------------------
       - name: Set variables
         run: |
-          echo "FFMPEG=$GITHUB_WORKSPACE/ffmpeg_bin/ffmpeg-master-latest-linux64-gpl/bin/ffmpeg" >> $GITHUB_ENV
-          echo "FFPROBE=$GITHUB_WORKSPACE/ffmpeg_bin/ffmpeg-master-latest-linux64-gpl/bin/ffprobe" >> $GITHUB_ENV
+          echo "FFMPEG=$GITHUB_WORKSPACE/ffmpeg_bin/ffmpeg-N-122306-geea648ef1d-linux64-gpl/bin/ffmpeg" >> $GITHUB_ENV
+          echo "FFPROBE=$GITHUB_WORKSPACE/ffmpeg_bin/ffmpeg-N-122306-geea648ef1d-linux64-gpl/bin/ffprobe" >> $GITHUB_ENV
           echo "INPUT=dataset/${{ matrix.VIDEO_ID }}.mp4" >> $GITHUB_ENV
 
       # ----------------------------------------
