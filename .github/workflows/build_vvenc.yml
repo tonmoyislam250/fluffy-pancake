@@ -6,6 +6,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
 
     steps:
       - name: Install build dependencies
@@ -34,3 +36,11 @@ jobs:
         with:
           path: vvenc/bin
           key: vvenc-build-${{ runner.os }}-v1
+
+      - name: Release vvenc binaries
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: vvenc-autobuild
+          name: vvenc Autobuild
+          files: vvenc/bin/vvencapp
+          make_latest: true
