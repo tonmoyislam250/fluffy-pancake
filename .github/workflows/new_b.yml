@@ -47,28 +47,14 @@ jobs:
           echo "INPUT=dataset/${{ matrix.VIDEO_ID }}.mp4" >> $GITHUB_ENV
 
       # ----------------------------------------
-      # Cache vvenc build
+      # Restore cached vvenc build (built by build_vvenc.yml)
       # ----------------------------------------
-      - name: Cache vvenc build
-        id: cache-vvenc
-        uses: actions/cache@v4
+      - name: Restore vvenc cache
+        uses: actions/cache/restore@v4
         with:
           path: vvenc/bin
           key: vvenc-build-${{ runner.os }}-v1
-
-      # ----------------------------------------
-      # Clone & Build vvenc
-      # ----------------------------------------
-      - name: Clone and build vvenc
-        if: steps.cache-vvenc.outputs.cache-hit != 'true'
-        run: |
-          git clone --depth 1 https://github.com/fraunhoferhhi/vvenc.git vvenc_src
-          cd vvenc_src
-          mkdir build && cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release
-          make -j$(nproc)
-          mkdir -p $GITHUB_WORKSPACE/vvenc/bin
-          cp ../bin/release-static/vvencapp $GITHUB_WORKSPACE/vvenc/bin/
+          fail-on-cache-miss: true
 
       - name: Set vvenc path
         run: |

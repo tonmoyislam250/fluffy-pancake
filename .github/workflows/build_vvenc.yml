@@ -1,0 +1,36 @@
+name: Build & Cache vvenc
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Install build dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential cmake git
+
+      - name: Clone vvenc
+        run: |
+          git clone --depth 1 https://github.com/fraunhoferhhi/vvenc.git vvenc_src
+
+      - name: Build vvenc (Release)
+        run: |
+          cd vvenc_src
+          mkdir build && cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          make -j$(nproc)
+
+      - name: Prepare cache directory
+        run: |
+          mkdir -p vvenc/bin
+          cp vvenc_src/bin/release-static/vvencapp vvenc/bin/
+
+      - name: Cache vvenc binaries
+        uses: actions/cache/save@v4
+        with:
+          path: vvenc/bin
+          key: vvenc-build-${{ runner.os }}-v1
