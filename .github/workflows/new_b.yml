@@ -131,10 +131,10 @@ jobs:
             echo "========================================"
 
             # ----------------------------------------
-            # 1. Extract 7 frames as a separate raw YUV
+            # 1. Extract 8 frames as a separate raw YUV
             # ----------------------------------------
             FIRST_FRAME=$((START - 1))
-            LAST_FRAME=$((START + 5))
+            LAST_FRAME=$((START + 6))
 
             $FFMPEG -v error -y \
               -i "$INPUT" \
@@ -146,7 +146,7 @@ jobs:
               yuv_segments/seg_${START}.yuv
 
             # ----------------------------------------
-            # 2. Encode the 7-frame YUV with vvencapp
+            # 2. Encode the 8-frame YUV with vvencapp
             # ----------------------------------------
             $VVENCAPP \
               -c $GITHUB_WORKSPACE/cfg/experimental/lowdelay_faster.cfg \
@@ -156,7 +156,7 @@ jobs:
               --SourceWidth=${WIDTH} \
               --SourceHeight=${HEIGHT} \
               --FrameRate=${FPS} \
-              --FramesToBeEncoded=7 \
+              --FramesToBeEncoded=8 \
               --QP=${QP}
 
             # ----------------------------------------
