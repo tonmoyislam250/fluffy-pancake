@@ -27,13 +27,13 @@ jobs:
         uses: actions/cache@v4
         with:
           path: VTM/bin
-          key: vtm-static-ubuntu-22.04-21.2
+          key: vtm-20.2-v1-Linux
 
       - name: Restore YUV segments
         uses: actions/cache@v4
         with:
-          path: Segments_ac
-          key: segments-ac-fps50-v1
+          path: segments
+          key: segments-mega-50-Linux
 
       - name: Locate EncoderApp
         run: |
