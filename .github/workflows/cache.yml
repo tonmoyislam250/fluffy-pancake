@@ -1,10 +1,10 @@
-name: Cache Dataset (MEGA)
+name: Cache segments (MEGA)
 
 on:
   workflow_dispatch:
 
 jobs:
-  cache-dataset:
+  cache-segments:
     runs-on: ubuntu-22.04
 
     steps:
@@ -17,30 +17,30 @@ jobs:
         sudo apt install -y unzip megatools
 
     # ----------------------------------------
-    # Cache dataset
+    # Cache segments
     # ----------------------------------------
-    - name: Restore dataset cache
+    - name: Restore Segments cache
       uses: actions/cache@v4
       with:
-        path: dataset
-        key: dataset-mega-v1-${{ runner.os }}
+        path: segmnets
+        key: segments-mega-60-${{ runner.os }}
 
     # ----------------------------------------
     # Download if cache miss
     # ----------------------------------------
-    - name: Download dataset (if needed)
+    - name: Download segments (if needed)
       run: |
-        if [ ! -d dataset ]; then
-          echo "📥 Cache miss → downloading dataset"
+        if [ ! -d segments ]; then
+          echo "📥 Cache miss → downloading segments"
 
-          mkdir -p dataset_zip
+          mkdir -p segments_zip
 
-          megadl "https://mega.nz/file/cu5mnB5Y#eHEPyXYcR77ONTh1WxJOUR2n9DL5IU8GUKuYPWxjjXw" \
-            --path dataset_zip
+          megadl "https://mega.nz/file/o3MEwKSK#aFnZUsfjUzHDXbVFkFc6mv_uAHYY7KK6Yrgko-Ta7hM" \
+            --path segments_zip
 
-          mkdir -p dataset
-          unzip -o dataset_zip/*.zip -d dataset
+          mkdir -p segments
+          unzip -o segments_zip/*.zip -d segments
 
         else
-          echo "✅ Dataset restored from cache"
+          echo "✅ segments restored from cache"
         fi
