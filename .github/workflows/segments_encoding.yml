@@ -75,4 +75,4 @@ jobs:
 
       - name: Upload to Google Drive
         run: |
-          rclone copy encoded_segments_ac dataset:Segments/encoded_segments_50_42 --progress
+          rclone copy encoded_segments_ac dataset:Segments/encoded_segments_50_47 --progress
