@@ -45,7 +45,7 @@ jobs:
           set -e
 
           VIDEO_ID=${{ matrix.VIDEO_ID }}
-          CFG=encoder_lowdelay_P_vtm_FixedQP_GOP_8.cfg
+          CFG="cfg/experimental/encoder_lowdelay_P_vtm_FixedQP_GOP_8.cfg"
 
           OUTDIR=encoded_segments_ac/seg_${VIDEO_ID}
           mkdir -p "$OUTDIR"
