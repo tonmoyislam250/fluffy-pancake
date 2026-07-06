@@ -35,7 +35,7 @@ jobs:
 
           mkdir -p segments_zip
 
-          megadl "https://mega.nz/file/x3UwDCAR#AvUPtb90hbAYyJQ45bgJ-8kuOYDkf7lnhlnQlpXDI3g" \
+          megadl "https://mega.nz/file/o3MEwKSK#aFnZUsfjUzHDXbVFkFc6mv_uAHYY7KK6Yrgko-Ta7hM" \
             --path segments_zip
 
           mkdir -p segments
