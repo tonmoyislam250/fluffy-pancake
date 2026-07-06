@@ -57,7 +57,7 @@ jobs:
 
             "$ENCODER" \
               -c "$CFG" \
-              -i "Segments_ac/seg_${VIDEO_ID}/${VIDEO_ID}_F_${START}_to_${END}_${WIDTH}_${HEIGHT}_${FPS}.yuv" \
+              -i "segments/Segments_ac_50/seg_${VIDEO_ID}/${VIDEO_ID}_F_${START}_to_${END}_${WIDTH}_${HEIGHT}_${FPS}.yuv" \
               -b "$OUTDIR/B_${VIDEO_ID}_F_${START}_to_${END}_${WIDTH}_${HEIGHT}_${FPS}.bin" \
               -o "$OUTDIR/C_${VIDEO_ID}_F_${START}_to_${END}_${WIDTH}_${HEIGHT}_${FPS}_GOP${GOP}_QP${QP}.yuv" \
               -wdt $WIDTH \
