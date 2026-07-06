@@ -23,7 +23,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: segments
-        key: segments-mega-50-${{ runner.os }}
+        key: segments-mega-60-${{ runner.os }}
 
     # ----------------------------------------
     # Download if cache miss
