@@ -22,7 +22,7 @@ jobs:
     - name: Restore Segments cache
       uses: actions/cache@v4
       with:
-        path: segmnets
+        path: segments
         key: segments-mega-50-${{ runner.os }}
 
     # ----------------------------------------
