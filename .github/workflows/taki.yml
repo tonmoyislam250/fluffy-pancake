@@ -1,0 +1,78 @@
+name: VTM Encode Taki → Google Drive
+
+on:
+  workflow_dispatch:
+
+jobs:
+  encode:
+    runs-on: ubuntu-22.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        VIDEO_ID: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200]
+
+    env:
+      WIDTH: 512
+      HEIGHT: 512
+      FPS: 30
+      QP: 37
+      GOP: 8
+      STARTS: "1 31 61 91 121"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Restore VTM binary
+        uses: actions/cache@v4
+        with:
+          path: VTM/bin
+          key: vtm-20.2-v1-Linux
+
+      - name: Restore YUV segments
+        uses: actions/cache@v4
+        with:
+          path: segments
+          key: segments-mega-30-Linux
+
+      - name: Locate EncoderApp
+        run: |
+          ENCODER=$(find VTM/bin -type f \( -name "EncoderAppStatic*" -o -name "EncoderApp*" \) | head -n1)
+          echo "ENCODER=$ENCODER" >> $GITHUB_ENV
+
+      - name: Encode segments
+        run: |
+          set -e
+
+          VIDEO_ID=${{ matrix.VIDEO_ID }}
+          CFG="cfg/experimental/encoder_lowdelay_P_vtm_FixedQP_GOP_8.cfg"
+
+          OUTDIR=encoded_segments_ac/seg_${VIDEO_ID}
+          mkdir -p "$OUTDIR"
+
+          LOG=$OUTDIR/encoding_summary_vid_${VIDEO_ID}.txt
+
+          for START in $STARTS; do
+            END=$((START+7))
+
+            "$ENCODER" \
+              -c "$CFG" \
+              -i "segments/Segments_ac_30/seg_${VIDEO_ID}/${VIDEO_ID}_F_${START}_to_${END}_${WIDTH}_${HEIGHT}_${FPS}.yuv" \
+              -b "$OUTDIR/B_${VIDEO_ID}_F_${START}_to_${END}_${WIDTH}_${HEIGHT}_${FPS}.bin" \
+              -o "$OUTDIR/C_${VIDEO_ID}_F_${START}_to_${END}_${WIDTH}_${HEIGHT}_${FPS}_GOP${GOP}_QP${QP}.yuv" \
+              -wdt $WIDTH \
+              -hgt $HEIGHT \
+              -fr $FPS \
+              -f 7 \
+              -q $QP >>"$LOG" 2>&1
+          done
+
+      - name: Install rclone
+        run: |
+          curl https://rclone.org/install.sh | sudo bash
+          mkdir -p ~/.config/rclone
+          echo "${{ secrets.RCLONE_CONFIG_BASE64 }}" | base64 -d > ~/.config/rclone/rclone.conf
+
+      - name: Upload to Google Drive
+        run: |
+          rclone copy encoded_segments_ac dataset:Segments_30/encoded_segments_30_37 --progress
