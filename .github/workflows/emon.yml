@@ -16,7 +16,7 @@ jobs:
       WIDTH: 512
       HEIGHT: 512
       FPS: 24
-      QP: 47
+      QP: 37
       GOP: 8
       STARTS: "1 25 49 73 97"
 
