@@ -16,7 +16,7 @@ jobs:
       WIDTH: 512
       HEIGHT: 512
       FPS: 60
-      QP: 42
+      QP: 47
       GOP: 8
       STARTS: "1 61 121 181 241"
 
@@ -75,4 +75,4 @@ jobs:
 
       - name: Upload to Google Drive
         run: |
-          rclone copy encoded_segments_ac dataset:Segments_60/encoded_segments_60_42 --progress
+          rclone copy encoded_segments_ac dataset:Segments_60/encoded_segments_60_47 --progress
