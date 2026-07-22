@@ -79,7 +79,7 @@ jobs:
 
           [ ! -f "$INPUT" ] && { echo "Missing $INPUT"; exit 1; }
 
-          OUTDIR="encoded_ac/QP_${QP}/${VIDEO_ID}"
+          OUTDIR="encoded_ac/"
           mkdir -p "$OUTDIR"
 
           "$ENCODER" \
