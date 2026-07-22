@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        VIDEO_ID: [BasketballPass_416x240_50.yuv] Change these to your desired 4 videos
+        VIDEO_ID: [BasketballPass_416x240_50.yuv] #Change these to your desired 4 videos
 
     env:
       WIDTH: 416
