@@ -1,0 +1,80 @@
+name: VTM Encode First 32 Frames (4 Videos)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  encode:
+    runs-on: ubuntu-22.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        VIDEO_ID: [351,352,353,354]   # Change these to your desired 4 videos
+
+    env:
+      WIDTH: 512
+      HEIGHT: 512
+      FPS: 60
+      QP: 51
+      GOP: 8
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Restore VTM binary
+        uses: actions/cache@v4
+        with:
+          path: VTM/bin
+          key: vtm-20.2-v1-Linux
+
+      - name: Restore YUV segments
+        uses: actions/cache@v4
+        with:
+          path: segments
+          key: class-d-linux
+
+      - name: Locate EncoderApp
+        run: |
+          ENCODER=$(find VTM/bin -type f \( -name "EncoderAppStatic*" -o -name "EncoderApp*" \) | head -n1)
+          echo "ENCODER=$ENCODER" >> $GITHUB_ENV
+          echo "Using encoder: $ENCODER"
+
+      - name: Encode first 32 frames
+        run: |
+          set -e
+
+          VIDEO_ID=${{ matrix.VIDEO_ID }}
+          CFG="cfg/experimental/encoder_lowdelay_P_vtm_FixedQP_GOP_8.cfg"
+
+          OUTDIR=encoded_segments_ac/seg_${VIDEO_ID}
+          mkdir -p "$OUTDIR"
+
+          LOG="$OUTDIR/encoding_summary_vid_${VIDEO_ID}.txt"
+
+          INPUT="segments/Segments_ac_60/seg_${VIDEO_ID}/${VIDEO_ID}_F_1_to_32_${WIDTH}_${HEIGHT}_${FPS}.yuv"
+
+          echo "Encoding: $INPUT"
+
+          "$ENCODER" \
+            -c "$CFG" \
+            -i "$INPUT" \
+            -b "$OUTDIR/B_${VIDEO_ID}_F_1_to_32_${WIDTH}_${HEIGHT}_${FPS}.bin" \
+            -o "$OUTDIR/C_${VIDEO_ID}_F_1_to_32_${WIDTH}_${HEIGHT}_${FPS}_GOP${GOP}_QP${QP}.yuv" \
+            -wdt $WIDTH \
+            -hgt $HEIGHT \
+            -fr $FPS \
+            -f 32 \
+            -q $QP \
+            >>"$LOG" 2>&1
+
+      - name: Install rclone
+        run: |
+          curl https://rclone.org/install.sh | sudo bash
+          mkdir -p ~/.config/rclone
+          echo "${{ secrets.RCLONE_CONFIG_BASE64 }}" | base64 -d > ~/.config/rclone/rclone.conf
+
+      - name: Upload to Google Drive
+        run: |
+          rclone copy encoded_segments_ac dataset:Segments_60/encoded_segments_60_51 --progress
