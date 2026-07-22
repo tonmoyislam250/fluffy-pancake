@@ -4,13 +4,17 @@ on:
   workflow_dispatch:
 
 jobs:
-  encode:
+ encode:
     runs-on: ubuntu-22.04
 
     strategy:
       fail-fast: false
       matrix:
-        VIDEO_ID: [BasketballPass_416x240_50.yuv] #Change these to your desired 4 videos
+        VIDEO_ID:
+          - BasketballPass_416x240_50
+          # - BlowingBubbles_416x240_50
+          # - BQSquare_416x240_60
+          # - RaceHorses_416x240_30
 
     env:
       WIDTH: 416
@@ -38,24 +42,34 @@ jobs:
       - name: Locate EncoderApp
         run: |
           ENCODER=$(find VTM/bin -type f \( -name "EncoderAppStatic*" -o -name "EncoderApp*" \) | head -n1)
-          echo "ENCODER=$ENCODER" >> $GITHUB_ENV
+
+          if [ -z "$ENCODER" ]; then
+            echo "EncoderApp not found!"
+            exit 1
+          fi
+
+          chmod +x "$ENCODER"
+          echo "ENCODER=$ENCODER" >> "$GITHUB_ENV"
           echo "Using encoder: $ENCODER"
 
       - name: Encode first 32 frames
         run: |
           set -e
 
-          VIDEO_ID=${{ matrix.VIDEO_ID }}
+          VIDEO_ID="${{ matrix.VIDEO_ID }}"
           CFG="cfg/experimental/encoder_lowdelay_P_vtm_FixedQP_GOP_8.cfg"
-
-          OUTDIR=encoded_ac/${VIDEO_ID}
-          mkdir -p "$OUTDIR"
-
-          LOG="$OUTDIR/encode_sum_${VIDEO_ID}.txt"
 
           INPUT="segments/Class D/${VIDEO_ID}.yuv"
 
-          echo "Encoding: $INPUT"
+          if [ ! -f "$INPUT" ]; then
+            echo "Input not found: $INPUT"
+            exit 1
+          fi
+
+          OUTDIR="encoded_ac/${VIDEO_ID}"
+          mkdir -p "$OUTDIR"
+
+          LOG="$OUTDIR/encode.log"
 
           "$ENCODER" \
             -c "$CFG" \
@@ -67,7 +81,7 @@ jobs:
             -fr $FPS \
             -f 32 \
             -q $QP \
-            >>"$LOG" 2>&1
+            >"$LOG" 2>&1
 
       - name: Install rclone
         run: |
@@ -77,4 +91,4 @@ jobs:
 
       - name: Upload to Google Drive
         run: |
-          rclone copy encoded_ac dataset:Testing_ClassD/ --progress
+          rclone copy encoded_ac dataset:Testing_ClassD_37 --progress
