@@ -1,10 +1,10 @@
-name: VTM Encode First 32 Frames (4 Videos)
+name: VTM Encode First 32 Frames (4 QPs)
 
 on:
   workflow_dispatch:
 
 jobs:
- encode:
+  encode:
     runs-on: ubuntu-22.04
 
     strategy:
@@ -15,12 +15,12 @@ jobs:
           # - BlowingBubbles_416x240_50
           # - BQSquare_416x240_60
           # - RaceHorses_416x240_30
+        QP: [37, 42, 47, 51]
 
     env:
       WIDTH: 416
       HEIGHT: 240
       FPS: 50
-      QP: 37
       GOP: 8
 
     steps:
@@ -57,6 +57,8 @@ jobs:
           set -e
 
           VIDEO_ID="${{ matrix.VIDEO_ID }}"
+          QP="${{ matrix.QP }}"
+
           CFG="cfg/experimental/encoder_lowdelay_P_vtm_FixedQP_GOP_8.cfg"
 
           INPUT="segments/Class D/${VIDEO_ID}.yuv"
@@ -66,16 +68,18 @@ jobs:
             exit 1
           fi
 
-          OUTDIR="encoded_ac/${VIDEO_ID}"
+          OUTDIR="encoded_ac/QP_${QP}/${VIDEO_ID}"
           mkdir -p "$OUTDIR"
 
           LOG="$OUTDIR/encode.log"
 
+          echo "Encoding ${VIDEO_ID} at QP ${QP}"
+
           "$ENCODER" \
             -c "$CFG" \
             -i "$INPUT" \
-            -b "$OUTDIR/B_${VIDEO_ID}_F_1_to_32.bin" \
-            -o "$OUTDIR/C_${VIDEO_ID}_F_1_to_32.yuv" \
+            -b "$OUTDIR/B_${VIDEO_ID}_QP_${QP}_F_1_to_32.bin" \
+            -o "$OUTDIR/C_${VIDEO_ID}_QP_${QP}_F_1_to_32.yuv" \
             -wdt $WIDTH \
             -hgt $HEIGHT \
             -fr $FPS \
@@ -91,4 +95,4 @@ jobs:
 
       - name: Upload to Google Drive
         run: |
-          rclone copy encoded_ac dataset:Testing_ClassD_37 --progress
+          rclone copy encoded_ac dataset:Testing_ClassD\${VIDEO_ID}\ --progress
