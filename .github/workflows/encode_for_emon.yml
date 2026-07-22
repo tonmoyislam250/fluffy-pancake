@@ -11,8 +11,8 @@ jobs:
       fail-fast: false
       matrix:
         VIDEO_ID:
-          - BasketballPass_416x240_50
-          # - BlowingBubbles_416x240_50
+          # - BasketballPass_416x240_50
+          - BlowingBubbles_416x240_50
           # - BQSquare_416x240_60
           # - RaceHorses_416x240_30
         QP: [37, 42, 47, 51]
@@ -95,4 +95,4 @@ jobs:
 
       - name: Upload to Google Drive
         run: |
-          rclone copy encoded_ac dataset:Testing_ClassD\${VIDEO_ID}\ --progress
+          rclone copy encoded_ac dataset:Testing_ClassD\${VIDEO_ID}\${QP} --progress
