@@ -10,13 +10,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        VIDEO_ID: [351,352,353,354]   # Change these to your desired 4 videos
+        VIDEO_ID: [BasketballPass_416x240_50.yuv] Change these to your desired 4 videos
 
     env:
-      WIDTH: 512
-      HEIGHT: 512
-      FPS: 60
-      QP: 51
+      WIDTH: 416
+      HEIGHT: 240
+      FPS: 50
+      QP: 37
       GOP: 8
 
     steps:
@@ -33,7 +33,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: segments
-          key: class-d-linux
+          key: classd-Linux
 
       - name: Locate EncoderApp
         run: |
@@ -48,20 +48,20 @@ jobs:
           VIDEO_ID=${{ matrix.VIDEO_ID }}
           CFG="cfg/experimental/encoder_lowdelay_P_vtm_FixedQP_GOP_8.cfg"
 
-          OUTDIR=encoded_segments_ac/seg_${VIDEO_ID}
+          OUTDIR=encoded_ac/${VIDEO_ID}
           mkdir -p "$OUTDIR"
 
-          LOG="$OUTDIR/encoding_summary_vid_${VIDEO_ID}.txt"
+          LOG="$OUTDIR/encode_sum_${VIDEO_ID}.txt"
 
-          INPUT="segments/Segments_ac_60/seg_${VIDEO_ID}/${VIDEO_ID}_F_1_to_32_${WIDTH}_${HEIGHT}_${FPS}.yuv"
+          INPUT="segments/Class D/${VIDEO_ID}.yuv"
 
           echo "Encoding: $INPUT"
 
           "$ENCODER" \
             -c "$CFG" \
             -i "$INPUT" \
-            -b "$OUTDIR/B_${VIDEO_ID}_F_1_to_32_${WIDTH}_${HEIGHT}_${FPS}.bin" \
-            -o "$OUTDIR/C_${VIDEO_ID}_F_1_to_32_${WIDTH}_${HEIGHT}_${FPS}_GOP${GOP}_QP${QP}.yuv" \
+            -b "$OUTDIR/B_${VIDEO_ID}_F_1_to_32.bin" \
+            -o "$OUTDIR/C_${VIDEO_ID}_F_1_to_32.yuv" \
             -wdt $WIDTH \
             -hgt $HEIGHT \
             -fr $FPS \
@@ -77,4 +77,4 @@ jobs:
 
       - name: Upload to Google Drive
         run: |
-          rclone copy encoded_segments_ac dataset:Segments_60/encoded_segments_60_51 --progress
+          rclone copy encoded_ac dataset:Testing_ClassD/ --progress
