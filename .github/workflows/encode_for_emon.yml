@@ -11,10 +11,10 @@ jobs:
       fail-fast: false
       matrix:
         VIDEO_ID:
-          - BasketballPass_416x240_50
-          - BlowingBubbles_416x240_50
-          - BQSquare_416x240_60
-          - RaceHorses_416x240_30
+          - BasketballDrill_832x480_50
+          - BQMall_832x480_60
+          - PartyScene_832x480_50
+          - RaceHorses_832x480_30
         QP: [37, 42, 47, 51]
 
     env:
@@ -50,20 +50,27 @@ jobs:
           VIDEO_ID="${{ matrix.VIDEO_ID }}"
 
           case "$VIDEO_ID" in
-            BasketballPass_416x240_50|BlowingBubbles_416x240_50)
-              echo "WIDTH=416" >> $GITHUB_ENV
-              echo "HEIGHT=240" >> $GITHUB_ENV
-              echo "FPS=50" >> $GITHUB_ENV
+            BasketballDrill_832x480_50|PartyScene_832x480_50)
+              echo "WIDTH=832" >> "$GITHUB_ENV"
+              echo "HEIGHT=480" >> "$GITHUB_ENV"
+              echo "FPS=50" >> "$GITHUB_ENV"
               ;;
-            BQSquare_416x240_60)
-              echo "WIDTH=416" >> $GITHUB_ENV
-              echo "HEIGHT=240" >> $GITHUB_ENV
-              echo "FPS=60" >> $GITHUB_ENV
+
+            BQMall_832x480_60)
+              echo "WIDTH=832" >> "$GITHUB_ENV"
+              echo "HEIGHT=480" >> "$GITHUB_ENV"
+              echo "FPS=60" >> "$GITHUB_ENV"
               ;;
-            RaceHorses_416x240_30)
-              echo "WIDTH=416" >> $GITHUB_ENV
-              echo "HEIGHT=240" >> $GITHUB_ENV
-              echo "FPS=30" >> $GITHUB_ENV
+
+            RaceHorses_832x480_30)
+              echo "WIDTH=832" >> "$GITHUB_ENV"
+              echo "HEIGHT=480" >> "$GITHUB_ENV"
+              echo "FPS=30" >> "$GITHUB_ENV"
+              ;;
+
+            *)
+              echo "Unknown VIDEO_ID: $VIDEO_ID"
+              exit 1
               ;;
           esac
 
@@ -75,11 +82,11 @@ jobs:
           QP="${{ matrix.QP }}"
 
           CFG="cfg/experimental/encoder_lowdelay_P_vtm_FixedQP_GOP_8.cfg"
-          INPUT="segments/Class D/${VIDEO_ID}.yuv"
+          INPUT="segments/Class C/${VIDEO_ID}.yuv"
 
-          [ ! -f "$INPUT" ] && { echo "Missing $INPUT"; exit 1; }
+          [ ! -f "$INPUT" ] && { echo "Missing input file: $INPUT"; exit 1; }
 
-          OUTDIR="encoded_ac/"
+          OUTDIR="encoded_ac"
           mkdir -p "$OUTDIR"
 
           "$ENCODER" \
@@ -92,7 +99,7 @@ jobs:
             -fr "$FPS" \
             -f 32 \
             -q "$QP" \
-            >"$OUTDIR/encode.log" 2>&1
+            > "$OUTDIR/encode.log" 2>&1
 
       - name: Install rclone
         run: |
@@ -104,5 +111,5 @@ jobs:
         run: |
           rclone copy \
             encoded_ac \
-            "dataset:Testing_ClassD2/${{ matrix.VIDEO_ID }}/QP_${{ matrix.QP }}" \
+            "dataset:Testing_ClassC/${{ matrix.VIDEO_ID }}/QP_${{ matrix.QP }}" \
             --progress
