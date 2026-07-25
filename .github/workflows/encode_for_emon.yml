@@ -1,4 +1,4 @@
-name: VTM Encode First 32 Frames (4 Videos × 4 QPs)
+name: VTM Encode First 32 Frames (Traffic × 4 QPs)
 
 on:
   workflow_dispatch:
@@ -11,10 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         VIDEO_ID:
-          - BasketballDrive_1920x1080_50
-          - BQTerrace_1920x1080_60
-          - Cactus_1920x1080_50
-          - MarketPlace_1920x1080_60
+          - Traffic_2560x1600_30
         QP: [37, 42, 47, 51]
 
     env:
@@ -47,26 +44,9 @@ jobs:
 
       - name: Set video parameters
         run: |
-          VIDEO_ID="${{ matrix.VIDEO_ID }}"
-
-          case "$VIDEO_ID" in
-            BasketballDrive_1920x1080_50|Cactus_1920x1080_50)
-              echo "WIDTH=1920" >> "$GITHUB_ENV"
-              echo "HEIGHT=1080" >> "$GITHUB_ENV"
-              echo "FPS=50" >> "$GITHUB_ENV"
-              ;;
-
-            BQTerrace_1920x1080_60|MarketPlace_1920x1080_60)
-              echo "WIDTH=1920" >> "$GITHUB_ENV"
-              echo "HEIGHT=1080" >> "$GITHUB_ENV"
-              echo "FPS=60" >> "$GITHUB_ENV"
-              ;;
-
-            *)
-              echo "Unknown VIDEO_ID: $VIDEO_ID"
-              exit 1
-              ;;
-          esac
+          echo "WIDTH=2560" >> "$GITHUB_ENV"
+          echo "HEIGHT=1600" >> "$GITHUB_ENV"
+          echo "FPS=30" >> "$GITHUB_ENV"
 
       - name: Encode first 32 frames
         run: |
@@ -76,7 +56,7 @@ jobs:
           QP="${{ matrix.QP }}"
 
           CFG="cfg/experimental/encoder_lowdelay_P_vtm_FixedQP_GOP_8.cfg"
-          INPUT="segments/All_Sequence/Class B/${VIDEO_ID}.yuv"
+          INPUT="segments/All_Sequence/Class A/${VIDEO_ID}.yuv"
 
           [ ! -f "$INPUT" ] && { echo "Missing input file: $INPUT"; exit 1; }
 
@@ -105,5 +85,5 @@ jobs:
         run: |
           rclone copy \
             encoded_ac \
-            "dataset:Testing_ClassB2/${{ matrix.VIDEO_ID }}/QP_${{ matrix.QP }}" \
+            "dataset:Testing_ClassA2/${{ matrix.VIDEO_ID }}/QP_${{ matrix.QP }}" \
             --progress
