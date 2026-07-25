@@ -33,7 +33,7 @@ jobs:
       - name: Restore YUV segments
         uses: actions/cache@v4
         with:
-          path: segments
+          path: segments/All_Sequence/Class C/
           key: classd-Linux
 
       - name: Locate EncoderApp
