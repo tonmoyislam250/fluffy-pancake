@@ -33,7 +33,7 @@ jobs:
       - name: Restore YUV segments
         uses: actions/cache@v4
         with:
-          path: segments/All_Sequence/Class C/
+          path: segments
           key: classd-Linux
 
       - name: Locate EncoderApp
@@ -82,7 +82,7 @@ jobs:
           QP="${{ matrix.QP }}"
 
           CFG="cfg/experimental/encoder_lowdelay_P_vtm_FixedQP_GOP_8.cfg"
-          INPUT="segments/Class C/${VIDEO_ID}.yuv"
+          INPUT="segments/All_Sequence/Class C/${VIDEO_ID}.yuv"
 
           [ ! -f "$INPUT" ] && { echo "Missing input file: $INPUT"; exit 1; }
 
