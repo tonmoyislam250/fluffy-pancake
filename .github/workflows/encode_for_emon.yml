@@ -34,7 +34,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: segments
-          key: classb-Linux
+          key: classd-Linux
 
       - name: Locate EncoderApp
         run: |
