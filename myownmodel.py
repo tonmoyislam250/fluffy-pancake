@@ -201,7 +201,7 @@ else:
 model.eval()
 
 # You can change this to point to the root containing all class folders.
-TESTING_CLASSD2_ROOT = Path('segments/Testing_ClassC/')
+TESTING_CLASSD2_ROOT = Path('segments/Testing_ClassD/')
 INFERENCE_SIZE = 512
 GOP_SIZE = 8
 
@@ -245,7 +245,7 @@ with torch.no_grad():
     _ = model(dummy)
     if DEVICE.type == 'cuda': torch.cuda.synchronize(DEVICE)
 
-out_csv = CKPT_DIR / 'prediction_times_C.csv'
+out_csv = CKPT_DIR / 'prediction_times_D.csv'
 print(f'Saving prediction times to: {out_csv}')
 with open(out_csv, 'w', newline='', encoding='utf-8') as f:
     writer = csv.writer(f)
