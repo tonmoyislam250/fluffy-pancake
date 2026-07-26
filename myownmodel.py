@@ -16,7 +16,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader
-import matplotlib.pyplot as plt
 from tqdm.auto import tqdm
 from pathlib import Path
 
