@@ -201,7 +201,7 @@ else:
 model.eval()
 
 # You can change this to point to the root containing all class folders.
-TESTING_CLASSD2_ROOT = Path('./segments/All_Sequence')
+TESTING_CLASSD2_ROOT = Path('segments/Testing_ClassA/')
 INFERENCE_SIZE = 512
 GOP_SIZE = 8
 
