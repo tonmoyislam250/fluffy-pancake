@@ -21,19 +21,15 @@ from tqdm.auto import tqdm
 from pathlib import Path
 
 ON_KAGGLE = os.path.exists('/kaggle/working')
-
-# for item in Path("/kaggle/working").iterdir():
-#     if item.is_file():
-#         item.unlink()
-#     elif item.is_dir():
-#         shutil.rmtree(item)
+ON_GITHUB = os.environ.get('GITHUB_ACTIONS') == 'true'
 
 if ON_KAGGLE:
     DATASET_ROOT = '/kaggle/input/datasets/tonmoyk983/sevtone-4-qp-gop8/sevtone_4_QP_GOP8/Inter4K/RAW'
     CKPT_DIR = '/kaggle/working'
 else:
-    DATASET_ROOT = r'D:\\Dataset\\Inter4K\\60fps\\UHD\\Segments\\sevtone_4_QP_GOP8\\Inter4K\\RAW'
-    CKPT_DIR = r'D:\\Dataset\\Inter4K\\60fps\\UHD\\Segments\\sevtone_4_QP_GOP8'
+    # Use relative paths for local and GitHub Actions
+    DATASET_ROOT = './Inter4K/RAW'
+    CKPT_DIR = '.'
 
 CKPT_DIR = Path(CKPT_DIR)
 CKPT_DIR.mkdir(parents=True, exist_ok=True)
@@ -62,7 +58,8 @@ RESUME_CKPT_PATH = "/kaggle/input/models/vaselinek983/check3/pytorch/3/1/myown_f
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 torch.backends.cudnn.benchmark = True
 
-print(f'Running on: {"Kaggle" if ON_KAGGLE else "Local"}')
+env_name = "Kaggle" if ON_KAGGLE else ("GitHub Actions" if ON_GITHUB else "Local")
+print(f'Running on: {env_name}')
 print(f'DATASET_ROOT : {DATASET_ROOT}')
 print(f'Device       : {DEVICE}')
 print(f'Best model   : {BEST_MODEL_PATH}')
@@ -257,7 +254,7 @@ import csv
 print('\n--- Prediction Time Benchmark ---')
 
 # Load weights if available
-EVAL_MODEL_PATH = CKPT_DIR / 'myown_fast_best_model_final.pth'
+EVAL_MODEL_PATH = Path('myown_fast_best_model_final.pth')
 if not EVAL_MODEL_PATH.exists():
     EVAL_MODEL_PATH = BEST_MODEL_PATH
 
