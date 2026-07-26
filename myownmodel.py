@@ -16,6 +16,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader
+from tqdm.auto import tqdm
 from pathlib import Path
 
 ON_KAGGLE = os.path.exists('/kaggle/working')
@@ -62,72 +63,7 @@ print(f'DATASET_ROOT : {DATASET_ROOT}')
 print(f'Device       : {DEVICE}')
 print(f'Best model   : {BEST_MODEL_PATH}')
 
-# %% [markdown]
-# ## Dataset
-# 
-# The loader follows `model2.ipynb`: input files are `sample_input_<id>.npy` with shape `(7, 512, 512)`, and target files are `sample_output_<id>.npy` with shape `(1, 512, 512)` or `(512, 512)`.
 
-# %%
-class Inter4KDataset(Dataset):
-    def __init__(self, root, sample_ids, crop_size=None, random_crop=True):
-        self.input_dir = Path(root) / 'Input'
-        self.output_dir = Path(root) / 'Output'
-        self.ids = list(sample_ids)
-        self.crop_size = crop_size
-        self.random_crop = random_crop
-
-    def __len__(self):
-        return len(self.ids)
-
-    def _crop_pair(self, x, y):
-        if self.crop_size is None:
-            return x, y
-        _, h, w = x.shape
-        cs = min(self.crop_size, h, w)
-        if self.random_crop:
-            top = random.randint(0, h - cs)
-            left = random.randint(0, w - cs)
-        else:
-            top = (h - cs) // 2
-            left = (w - cs) // 2
-        return x[:, top:top + cs, left:left + cs], y[:, top:top + cs, left:left + cs]
-
-    def __getitem__(self, idx):
-        sid = self.ids[idx]
-        x = np.load(self.input_dir / f'sample_input_{sid}.npy')
-        y = np.load(self.output_dir / f'sample_output_{sid}.npy')
-        if y.ndim == 2:
-            y = y[np.newaxis]
-
-        x, y = self._crop_pair(x, y)
-        x = np.ascontiguousarray(x.astype(np.float32) / 255.0)
-        y = np.ascontiguousarray(y.astype(np.float32) / 255.0)
-
-        x = torch.from_numpy(x).unsqueeze(1)  # (7, 1, H, W)
-        y = torch.from_numpy(y)               # (1, H, W)
-        return x, y
-
-
-all_ids = list(range(1, SUBSET_SIZE + 1))
-split_idx = int(len(all_ids) * (1 - VAL_FRACTION))
-train_ids = all_ids[:split_idx]
-val_ids = all_ids[split_idx:]
-
-train_ds = Inter4KDataset(DATASET_ROOT, train_ids, crop_size=TRAIN_CROP_SIZE, random_crop=True)
-val_ds = Inter4KDataset(DATASET_ROOT, val_ids, crop_size=None, random_crop=False)
-
-loader_kwargs = dict(
-    num_workers=NUM_WORKERS,
-    pin_memory=(DEVICE.type == 'cuda'),
-    persistent_workers=(NUM_WORKERS > 0),
-)
-train_loader = DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True, **loader_kwargs)
-val_loader = DataLoader(val_ds, batch_size=max(1, BATCH_SIZE // 2), shuffle=False, **loader_kwargs)
-
-print(f'Train: {len(train_ds)} samples | Val: {len(val_ds)} samples')
-print(f'Train batches: {len(train_loader)} | Val batches: {len(val_loader)}')
-x0, y0 = train_ds[0]
-print(f'Sample x shape: {tuple(x0.shape)} | y shape: {tuple(y0.shape)}')
 
 # %% [markdown]
 # ## Fast Model
