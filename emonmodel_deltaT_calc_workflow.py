@@ -29,7 +29,7 @@ else:
 
 CKPT_DIR = Path(CKPT_DIR)
 CKPT_DIR.mkdir(parents=True, exist_ok=True)
-BEST_MODEL_PATH = CKPT_DIR / 'myown_fast_best_model.pth'
+BEST_MODEL_PATH = CKPT_DIR / 'best_model.pt'
 LAST_CKPT_PATH = CKPT_DIR / 'myown_fast_last_checkpoint.pth'
 
 # Dataset / training config
