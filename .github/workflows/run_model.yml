@@ -30,7 +30,7 @@ jobs:
 
       - name: Run Prediction Script
         run: |
-          python myownmodel.py
+          python emonmodel_deltaT_calc_workflow.py
 
       - name: Install rclone
         run: |
@@ -42,5 +42,5 @@ jobs:
         run: |
           rclone copy \
             prediction_times.csv \
-            "dataset:Testing_ClassA2_Results/" \
+            "dataset:EMON_Classes_Results/" \
             --progress
