@@ -29,7 +29,7 @@ else:
 
 CKPT_DIR = Path(CKPT_DIR)
 CKPT_DIR.mkdir(parents=True, exist_ok=True)
-BEST_MODEL_PATH = CKPT_DIR / 'best_model.pt'
+BEST_MODEL_PATH = CKPT_DIR / 'convLSTM_final.pt'
 LAST_CKPT_PATH = CKPT_DIR / 'myown_fast_last_checkpoint.pth'
 
 # Dataset / training config
@@ -227,13 +227,14 @@ import csv
 print('\n--- Prediction Time Benchmark ---')
 
 # Load weights if available
-EVAL_MODEL_PATH = Path('myown_fast_best_model_final.pth')
-if not EVAL_MODEL_PATH.exists():
-    EVAL_MODEL_PATH = BEST_MODEL_PATH
+EVAL_MODEL_PATH = BEST_MODEL_PATH  # convLSTM_final.pt
 
 if EVAL_MODEL_PATH.exists():
     base_model = model.module if isinstance(model, nn.DataParallel) else model
-    base_model.load_state_dict(torch.load(EVAL_MODEL_PATH, map_location=DEVICE))
+    ckpt = torch.load(EVAL_MODEL_PATH, map_location=DEVICE)
+    # The training notebook saves {'epoch':..., 'state_dict':..., ...}
+    state_dict = ckpt['state_dict'] if isinstance(ckpt, dict) and 'state_dict' in ckpt else ckpt
+    base_model.load_state_dict(state_dict)
     print(f'Loaded checkpoint: {EVAL_MODEL_PATH}')
 else:
     print('No checkpoint found. Running with untrained weights.')
@@ -241,7 +242,7 @@ else:
 model.eval()
 
 # You can change this to point to the root containing all class folders.
-TESTING_CLASSD2_ROOT = Path('./Testing_ClassD')
+TESTING_CLASSD2_ROOT = Path('Reconstructed/Testing_ClassD')
 INFERENCE_SIZE = 512
 GOP_SIZE = 8
 
