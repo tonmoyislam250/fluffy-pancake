@@ -29,7 +29,7 @@ else:
 
 CKPT_DIR = Path(CKPT_DIR)
 CKPT_DIR.mkdir(parents=True, exist_ok=True)
-BEST_MODEL_PATH = CKPT_DIR / 'convLSTM_final.pt'
+BEST_MODEL_PATH = CKPT_DIR / 'best_model.pt'
 LAST_CKPT_PATH = CKPT_DIR / 'myown_fast_last_checkpoint.pth'
 
 # Dataset / training config
@@ -242,7 +242,7 @@ else:
 model.eval()
 
 # You can change this to point to the root containing all class folders.
-TESTING_CLASSD2_ROOT = Path('segments/Testing_ClassD/')
+TESTING_CLASSD2_ROOT = Path('segments/Testing_ClassD')
 INFERENCE_SIZE = 512
 GOP_SIZE = 8
 
