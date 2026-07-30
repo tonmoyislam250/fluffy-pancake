@@ -86,7 +86,7 @@ jobs:
           echo "=============================="
           echo "Running Prediction Script"
           echo "=============================="
-          /usr/bin/time -v python calculate_prediction_time.py
+          python calculate_prediction_time.py
 
       - name: Install rclone
         run: |
