@@ -21,16 +21,23 @@ jobs:
           python -m pip install --upgrade pip
           pip install torch numpy
 
-      - name: Cache Video Classes
+      - name: Restore Video Classes Cache
         id: cache-classes
         uses: actions/cache@v4
         with:
           path: segments
           key: classd-Linux
 
+      - name: Restore Model Cache
+        id: cache-model
+        uses: actions/cache@v4
+        with:
+          path: models
+          key: taki_model-Linux
+
       - name: Run Prediction Script
         run: |
-          python emonmodel_deltaT_calc_workflow.py
+          python calculate_prediction_time.py
 
       - name: Install rclone
         run: |
@@ -38,9 +45,9 @@ jobs:
           mkdir -p ~/.config/rclone
           echo "${{ secrets.RCLONE_CONFIG_BASE64 }}" | base64 -d > ~/.config/rclone/rclone.conf
 
-      - name: Upload to Google Drive
+      - name: Upload Results to Google Drive
         run: |
           rclone copy \
             prediction_times_A.csv \
-            "dataset:EMON_Classes_Results/" \
+            "dataset:Taki_Classes_Results/" \
             --progress
