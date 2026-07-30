@@ -323,7 +323,6 @@ with torch.no_grad():
             
             pred = base_model(x).float()
             
-            if DEVICE.type == 'cuda': torch.cuda.synchronize(DEVICE)
             pred_time = time.perf_counter() - start_t
             
             print(f"  Frame {frame_index} prediction time: {pred_time:.5f} seconds")
