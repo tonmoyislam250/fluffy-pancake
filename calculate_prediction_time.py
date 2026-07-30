@@ -32,14 +32,14 @@ from torchvision import transforms
 # =============================================================================
 
 # Root directory containing Testing_ClassA .. Testing_ClassD subdirectories
-TESTING_ROOT = r"segments/"
+TESTING_ROOT = r"D:\Dataset\Inter4K\60fps\UHD\Segments\sevtone_4_QP_GOP8\Reconstructed"
 
 # Path to trained model checkpoint
-CKPT_PATH = r"models/Taki_model.pt"
+CKPT_PATH = r"Taki_model.pt"
 
 # Output directory & output CSV path
-OUT_DIR  = r"."
-PRED_CSV = os.path.join(OUT_DIR, "prediction_times_D.csv")
+OUT_DIR  = r"D:\Dataset\Inter4K\60fps\UHD\Segments\sevtone_4_QP_GOP8\Reconstructed"
+PRED_CSV = os.path.join(OUT_DIR, "prediction_times.csv")
 
 # GOP configuration
 GOP_SIZE      = 8
@@ -47,7 +47,7 @@ SEQ_LEN       = GOP_SIZE - 1    # 7 input frames
 TARGET_FRAMES = [8, 16, 24, 32] # 1-indexed frame numbers (last frame of each GOP-8)
 QPS           = ["QP_37", "QP_42", "QP_47", "QP_51"]
 
-CLASS_FOLDERS = ["Testing_ClassD"]
+CLASS_FOLDERS = ["Testing_ClassA"]
 
 # Benchmark timing settings
 WARMUP_ITERS = 2
@@ -309,22 +309,14 @@ def measure_prediction_time(model, vvc_yuv_path, width, height, gop_start_0idx, 
     # Warmup runs
     with torch.no_grad():
         for _ in range(WARMUP_ITERS):
-            with torch.amp.autocast(device_type='cuda', enabled=amp_enabled):
-                _ = model(x)
-            if DEVICE == 'cuda':
-                torch.cuda.synchronize()
+            _ = model(x)
 
     # Timed runs
     times = []
     with torch.no_grad():
         for _ in range(TIMED_ITERS):
-            if DEVICE == 'cuda':
-                torch.cuda.synchronize()
             t0 = time.perf_counter()
-            with torch.amp.autocast(device_type='cuda', enabled=amp_enabled):
-                _ = model(x)
-            if DEVICE == 'cuda':
-                torch.cuda.synchronize()
+            _ = model(x)
             t1 = time.perf_counter()
             times.append(t1 - t0)
 
