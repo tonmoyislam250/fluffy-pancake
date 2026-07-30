@@ -39,7 +39,7 @@ CKPT_PATH = r"Taki_model.pt"
 
 # Output directory & output CSV path
 OUT_DIR  = r"D:\Dataset\Inter4K\60fps\UHD\Segments\sevtone_4_QP_GOP8\Reconstructed"
-PRED_CSV = os.path.join(OUT_DIR, "prediction_times.csv")
+PRED_CSV = os.path.join(OUT_DIR, "prediction_times_A.csv")
 
 # GOP configuration
 GOP_SIZE      = 8
