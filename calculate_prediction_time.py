@@ -39,7 +39,7 @@ CKPT_PATH = r"models/Taki_model.pt"
 
 # Output directory & output CSV path
 OUT_DIR  = r"."
-PRED_CSV = os.path.join(OUT_DIR, "prediction_times_A.csv")
+PRED_CSV = os.path.join(OUT_DIR, "prediction_times_B.csv")
 
 # GOP configuration
 GOP_SIZE      = 8
@@ -47,7 +47,7 @@ SEQ_LEN       = GOP_SIZE - 1    # 7 input frames
 TARGET_FRAMES = [8, 16, 24, 32] # 1-indexed frame numbers (last frame of each GOP-8)
 QPS           = ["QP_37", "QP_42", "QP_47", "QP_51"]
 
-CLASS_FOLDERS = ["Testing_ClassA"]
+CLASS_FOLDERS = ["Testing_ClassB"]
 
 # Benchmark timing settings
 WARMUP_ITERS = 2
