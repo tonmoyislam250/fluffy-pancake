@@ -48,6 +48,6 @@ jobs:
       - name: Upload Results to Google Drive
         run: |
           rclone copy \
-            prediction_times_D.csv \
+            prediction_times_A.csv \
             "dataset:Taki_Classes_Results/" \
             --progress
