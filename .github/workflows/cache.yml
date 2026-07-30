@@ -22,8 +22,8 @@ jobs:
     - name: Restore Segments cache
       uses: actions/cache@v4
       with:
-        path: segments
-        key: classd-${{ runner.os }}
+        path: models
+        key: taki_model-${{ runner.os }}
 
     # ----------------------------------------
     # Download if cache miss
@@ -35,11 +35,11 @@ jobs:
 
           mkdir -p segments_zip
 
-          megadl "https://mega.nz/file/A2lUiToY#KI9I0NjYaUalC2k9F4Go1jRwgqI8GC8rV9ZQaG9AUk0" \
+          megadl "https://mega.nz/file/Aq1z2ZyA#OmKTahs0XMAnLFQ9sIvNU0sWDgtePDhSwU8lKZkqFfE" \
             --path segments_zip
 
-          mkdir -p segments
-          unzip -o segments_zip/*.zip -d segments
+          mkdir -p models
+          unzip -o segments_zip/*.zip -d models
 
         else
           echo "✅ segments restored from cache"
