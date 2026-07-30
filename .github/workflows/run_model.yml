@@ -35,10 +35,59 @@ jobs:
           path: models
           key: taki_model-Linux
 
+      - name: Show Runner Specifications
+        run: |
+          echo "=============================="
+          echo "Operating System"
+          echo "=============================="
+          uname -a
+          cat /etc/os-release
+
+          echo ""
+          echo "=============================="
+          echo "CPU Information"
+          echo "=============================="
+          lscpu
+
+          echo ""
+          echo "Logical CPU Cores:"
+          nproc
+
+          echo ""
+          echo "=============================="
+          echo "Memory"
+          echo "=============================="
+          free -h
+
+          echo ""
+          echo "=============================="
+          echo "Disk Space"
+          echo "=============================="
+          df -h
+
+          echo ""
+          echo "=============================="
+          echo "Python"
+          echo "=============================="
+          python --version
+
+          echo ""
+          echo "=============================="
+          echo "PyTorch"
+          echo "=============================="
+          python - <<EOF
+          import torch
+          print("PyTorch Version :", torch.__version__)
+          print("CUDA Available  :", torch.cuda.is_available())
+          EOF
+
       - name: Run Prediction Script
         run: |
-          python calculate_prediction_time.py
-          
+          echo "=============================="
+          echo "Running Prediction Script"
+          echo "=============================="
+          /usr/bin/time -v python calculate_prediction_time.py
+
       - name: Install rclone
         run: |
           curl https://rclone.org/install.sh | sudo bash
