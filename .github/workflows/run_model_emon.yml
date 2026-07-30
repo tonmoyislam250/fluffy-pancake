@@ -1,0 +1,53 @@
+name: Run Prediction Model and Upload
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-model:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch torchvision numpy pillow
+
+      - name: Restore Video Classes Cache
+        id: cache-classes
+        uses: actions/cache@v4
+        with:
+          path: segments
+          key: classd-Linux
+
+      - name: Restore Model Cache
+        id: cache-model
+        uses: actions/cache@v4
+        with:
+          path: models
+          key: taki_model-Linux
+
+      - name: Run Prediction Script
+        run: |
+          python emonmodel_deltaT_calc_workflow.py
+          
+      - name: Install rclone
+        run: |
+          curl https://rclone.org/install.sh | sudo bash
+          mkdir -p ~/.config/rclone
+          echo "${{ secrets.RCLONE_CONFIG_BASE64 }}" | base64 -d > ~/.config/rclone/rclone.conf
+
+      - name: Upload Results to Google Drive
+        run: |
+          rclone copy \
+            prediction_times_C.csv \
+            "dataset:EMON_Classes_Results/" \
+            --progress
