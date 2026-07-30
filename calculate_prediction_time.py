@@ -32,14 +32,14 @@ from torchvision import transforms
 # =============================================================================
 
 # Root directory containing Testing_ClassA .. Testing_ClassD subdirectories
-TESTING_ROOT = r"D:\Dataset\Inter4K\60fps\UHD\Segments\sevtone_4_QP_GOP8\Reconstructed"
+TESTING_ROOT = r"segments/"
 
 # Path to trained model checkpoint
 CKPT_PATH = r"Taki_model.pt"
 
 # Output directory & output CSV path
-OUT_DIR  = r"D:\Dataset\Inter4K\60fps\UHD\Segments\sevtone_4_QP_GOP8\Reconstructed"
-PRED_CSV = os.path.join(OUT_DIR, "prediction_times.csv")
+OUT_DIR  = r"."
+PRED_CSV = os.path.join(OUT_DIR, "prediction_times_A.csv")
 
 # GOP configuration
 GOP_SIZE      = 8
