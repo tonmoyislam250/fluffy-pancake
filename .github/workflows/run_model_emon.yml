@@ -48,6 +48,6 @@ jobs:
       - name: Upload Results to Google Drive
         run: |
           rclone copy \
-            prediction_times_C.csv \
+            prediction_times_B.csv \
             "dataset:EMON_Classes_Results/" \
             --progress
