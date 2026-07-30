@@ -37,8 +37,8 @@ jobs:
 
       - name: Run Prediction Script
         run: |
-          python emonmodel_deltaT_calc_workflow.py
-
+          python calculate_prediction_time.py
+          
       - name: Install rclone
         run: |
           curl https://rclone.org/install.sh | sudo bash
@@ -49,5 +49,5 @@ jobs:
         run: |
           rclone copy \
             prediction_times_D.csv \
-            "dataset:EMON_Classes_Results/" \
+            "dataset:Taki_Classes_Results/" \
             --progress
