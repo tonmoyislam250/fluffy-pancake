@@ -39,7 +39,8 @@ jobs:
             --path segments_zip
 
           mkdir -p models
-          unzip -o segments_zip/*.zip -d models
+          cp segments_zip/* models/
+          # unzip -o segments_zip/*.zip -d models
 
         else
           echo "✅ segments restored from cache"
