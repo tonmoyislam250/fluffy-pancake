@@ -35,7 +35,7 @@ from torchvision import transforms
 TESTING_ROOT = r"D:\Dataset\Inter4K\60fps\UHD\Segments\sevtone_4_QP_GOP8\Reconstructed"
 
 # Path to trained model checkpoint
-CKPT_PATH = r"Taki_model.pt"
+CKPT_PATH = r"models\Taki_model.pt"
 
 # Output directory & output CSV path
 OUT_DIR  = r"D:\Dataset\Inter4K\60fps\UHD\Segments\sevtone_4_QP_GOP8\Reconstructed"
